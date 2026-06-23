@@ -569,15 +569,19 @@ dTi_dR = np.gradient(Ti, rho_common) * mapping_factor
 Gamma = -D * dn_dR
 
 # Total Heat fluxes (incorporating the 1.5 factor from Eq. 2)
-Qe = -1.5 * ne * chi_e * dTe_dR * e_charge
-Qi = -1.5 * ne * chi_i * dTi_dR * e_charge
+Qe = -1 * ne * chi_e * dTe_dR * e_charge + 1.5*Te*Gamma*e_charge # * -1.5 
+Qi = -1 * ne * chi_i * dTi_dR * e_charge + 1.5*Ti*Gamma*e_charge # * -1.5 
+
+print(-ne * chi_e * dTe_dR * e_charge)
+print(1.5*Te*Gamma*e_charge)
+print(Qe)
 
 # ==========================================
 # 5. EXPORT MASTER CSV
 # ==========================================
 master_data = np.column_stack((rho_common, ne, Te, Ti, dn_dR, dTe_dR, dTi_dR, D, chi_e, chi_i, Gamma, Qe, Qi))
 header_str = "rho_pol, ne, Te, Ti, dn_dR, dTe_dR, dTi_dR, D, chi_e, chi_i, Gamma, Qe, Qi"
-np.savetxt("aug36190_master_dataset.csv", master_data, delimiter=",", header=header_str, comments='')
+np.savetxt("aug36190_master_dataset_2.csv", master_data, delimiter=",", header=header_str, comments='')
 print("Dataset successfully saved to 'aug36190_master_dataset.csv'")
 
 # ==========================================

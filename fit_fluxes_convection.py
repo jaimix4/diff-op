@@ -2,21 +2,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 from scipy.optimize import minimize
+from scipy.ndimage import gaussian_filter1d
 
 # ==========================================
 # 1. LOAD THE GROUND TRUTH DATA
 # ==========================================
-data = np.loadtxt("aug36190_master_dataset.csv", delimiter=",", skiprows=1)
+data = np.loadtxt("aug36190_master_dataset_2.csv", delimiter=",", skiprows=1)
 
 rho = data[:, 0]
 n = data[:, 1]
 T = data[:, 2]        
-dn_dR = data[:, 4]
-dT_dR = data[:, 5]
-Gamma_data = data[:, 10]
-Qe_total_data = data[:, 11]
+dn_dR_raw = data[:, 4]
+dT_dR_raw = data[:, 5]
+Gamma_raw = data[:, 10]
+Qe_total_raw = data[:, 11]
 
 e_charge = 1.602e-19 # J/eV
+
+smooth_sigma = 3.0
+
+# Apply the convolution filter
+dn_dR = gaussian_filter1d(dn_dR_raw, sigma=smooth_sigma)
+dT_dR = gaussian_filter1d(dT_dR_raw, sigma=smooth_sigma)
+Gamma_data = gaussian_filter1d(Gamma_raw, sigma=smooth_sigma)
+Qe_total_data = gaussian_filter1d(Qe_total_raw, sigma=smooth_sigma)
 
 # Compute pure conductive heat flux from the data
 q_data = Qe_total_data - (1.5 * Gamma_data * T * e_charge)
