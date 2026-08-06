@@ -1,3 +1,4 @@
+from fit_fluxes_convection import Gamma_data
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
@@ -72,8 +73,14 @@ Gamma_norm = Gamma / 1e19
 # To get the heat flux into the specific eV-normalized scale shown in the plot, 
 # we divide by n0 (1e19), T0 (200), and e_charge.
 norm_factor_heat = (1e19 * 200 * e_charge)
-Qe_norm = Qe / norm_factor_heat
-Qi_norm = Qi / norm_factor_heat
+
+# qe_data = Qe_total_data - (1.5 * Gamma_data * Te * e_charge)
+# qi_data = Qi_total_data - (1.5 * Gamma_data * Ti * e_charge)
+
+
+Qe_norm = (Qe - (1.5 * Gamma * Te * e_charge)) / norm_factor_heat
+Qi_norm = (Qi - (1.5 * Gamma * Ti * e_charge))/ norm_factor_heat
+# Qi_norm = Qi / norm_factor_heat
 
 RHO_SEPARATRIX = 1.0
 
@@ -127,7 +134,7 @@ axs[3].legend(loc='upper left')
 axs[4].plot(rho, Qe_norm, color=c_e, lw=LW, alpha=AL, label=r'$\frac{q_{e,r}}{200} [\mathrm{eV}\cdot\mathrm{m}^{-2}\cdot\mathrm{s}^{-1}]$')
 axs[4].plot(rho, Qi_norm, color=c_i, lw=LW, alpha=AL, label=r'$\frac{q_{i,r}}{200} [\mathrm{eV}\cdot\mathrm{m}^{-2}\cdot\mathrm{s}^{-1}]$')
 axs[4].set_ylabel("e)", rotation=0, labelpad=15)
-axs[4].set_title("Normalized Radial Heat Fluxes")
+axs[4].set_title("Normalized Radial Conductive Heat Fluxes")
 axs[4].set_xlabel(r"$\rho_{pol}[-]$")
 axs[4].legend(loc='upper left')
 
